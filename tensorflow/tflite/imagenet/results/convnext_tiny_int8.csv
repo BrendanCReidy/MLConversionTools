@@ -1,0 +1,2 @@
+,MODEL_NAME,ACCURACY,SIZE (MB)
+0,convnext_tiny_int8,72.15,40.09

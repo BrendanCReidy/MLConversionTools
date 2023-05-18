@@ -1,0 +1,2 @@
+,MODEL_NAME,ACCURACY,SIZE (MB)
+0,mobilenetv2_int8,70.884,3.81
