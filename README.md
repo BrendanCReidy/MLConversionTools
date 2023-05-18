@@ -4,17 +4,29 @@ Typical pipeline for PyTorch to INT8 tflite for ImageNet
 
 1. Save PyTorch model (this varies by model, see pytorch/models/imagenet/mobilenetv2_onnx.py for example)
 2. Make shapes static if not already (e.g:
-```python -m onnxruntime.tools.make_dynamic_shape_fixed --dim_param batch --dim_value 1 model.onnx model.fixed.onnx```
+```
+python -m onnxruntime.tools.make_dynamic_shape_fixed --dim_param batch --dim_value 1 model.onnx model.fixed.onnx
+```
 3. Fold constants: 
-```polygraphy surgeon sanitize /workspace/model_profiling/pytorch/models/language/mobilebert_mrpc.onnx -o folded.onnx --fold-constants```
+```
+polygraphy surgeon sanitize /workspace/model_profiling/pytorch/models/language/mobilebert_mrpc.onnx -o folded.onnx --fold-constants
+```
 4. Convert to tensorflow saved model format (onnx/onnx_to_tensorflow.py)
-```onnx_to_tensorflow.py <onnx_model_path> <out_model_path>```
+```
+python3 onnx_to_tensorflow.py <onnx_model_path> <out_model_path>
+```
 5. Convert to FP32 TFLite model (tensorflow/tf_to_tflite.py)
-```tf_to_tflite.py <tf_model_path> <output_tflite_model_path>```
+```
+python3 tf_to_tflite.py <tf_model_path> <output_tflite_model_path>
+```
 6. Convert to INT8 TFLite model (tensorflow/imagenet_to_tflite_int8.py)
-```imagenet_to_tflite_int8.py <tf_model_path> <output_tflite_model_path>```
+```
+python3 imagenet_to_tflite_int8.py <tf_model_path> <output_tflite_model_path>
+```
 7. Evaluate model on ImageNet (tensorflow/tflite/imagenet/evaluate_imagenet_tflite.py)
-```evaluate_imagenet_tflite.py <model_path>```
+```
+python3 evaluate_imagenet_tflite.py <model_path>
+```
 
 Typical pipeline for PyTorch to INT8 tflite for Language Transformers
 
@@ -25,23 +37,33 @@ python run_glue.py   --model_name_or_path google/mobilebert-uncased   --task_nam
 python -m transformers.onnx --model=mrpc ../bert-mrpc.onnx --feature=sequence-classification
 mv ../bert-mrpc.onnx/model.onnx mobilebert.onnx
 ```
-3. Make shapes static if not already (e.g:
+3. Make shapes static
 ```
 python -m onnxruntime.tools.make_dynamic_shape_fixed --dim_param batch --dim_value 1 mobilebert.onnx mobilebert.onnx
 python -m onnxruntime.tools.make_dynamic_shape_fixed --dim_param sequence --dim_value 128 mobilebert.onnx mobilebert.onnx
 ```
 4. Fold constants: 
-```polygraphy surgeon sanitize mobilebert.onnx -o mobilebert_folded.onnx --fold-constants```
+```
+polygraphy surgeon sanitize mobilebert.onnx -o mobilebert_folded.onnx --fold-constants
+```
 4. Change mask to INT8 value
 ```
 cp mobilebert_folded.onnx ../../../graph_surgeon/
 python3 modify_mobilebert_2.py
 ```
 6. Convert to tensorflow saved model format (onnx/onnx_to_tensorflow.py)
-```onnx_to_tensorflow.py <onnx_model_path> <out_model_path>```
+```
+python3 onnx_to_tensorflow.py <onnx_model_path> <out_model_path>
+```
 6. Convert to FP32 TFLite model (tensorflow/tf_to_tflite.py)
-```tf_to_tflite.py <tf_model_path> <output_tflite_model_path>```
-7. Convert to INT8 TFLite model (tensorflow/imagenet_to_tflite_int8.py)
-```imagenet_to_tflite_int8.py <tf_model_path> <output_tflite_model_path>```
-8. Evaluate model on ImageNet (tensorflow/tflite/imagenet/evaluate_imagenet_tflite.py)
-```evaluate_imagenet_tflite.py <model_path>```
+```
+python3 tf_to_tflite.py <tf_model_path> <output_tflite_model_path>
+```
+7. Convert to INT8 TFLite model (tensorflow/gleu_to_tflite_int8.py)
+```
+python3 gleu_to_tflite_int8.py <tf_model_path> <output_tflite_model_path>
+```
+8. Evaluate model on MRPC (tensorflow/tflite/language/evaluate_mrpc_tflite.py)
+```
+python3 evaluate_mrpc_tflite.py
+```
