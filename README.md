@@ -1,5 +1,8 @@
 # ConverstionTools
 
+This repository contains many helpful scripts for converting models from one framework to another (pytorch->onnx->TF->TFLite). The repository also contains code for modifying the computational graph and identifying quantization errors.
+
+## ImageNet Example
 Typical pipeline for PyTorch to INT8 tflite for ImageNet
 
 1. Save PyTorch model (this varies by model, see pytorch/models/imagenet/mobilenetv2_onnx.py for example)
@@ -27,7 +30,7 @@ python3 imagenet_to_tflite_int8.py <tf_model_path> <output_tflite_model_path>
 ```
 python3 evaluate_imagenet_tflite.py <model_path>
 ```
-
+## MRPC (Language Transformer) Example
 Typical pipeline for PyTorch to INT8 tflite for Language Transformers
 
 1. Save and train transformer model:
