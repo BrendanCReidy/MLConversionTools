@@ -1,4 +1,4 @@
-# ConverstionTools
+# Conversion Tools
 
 This repository contains many helpful scripts for converting models from one framework to another (pytorch->onnx->TF->TFLite). The repository also contains code for modifying the computational graph and identifying quantization errors.
 
